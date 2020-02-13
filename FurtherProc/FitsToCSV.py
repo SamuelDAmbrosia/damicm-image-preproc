@@ -36,7 +36,7 @@ def imageToDict(filepath):
     dictImage['imgNoise'] = pd.computeImageNoise(data[:, :, :-1])
     
     #find individual peak noise
-    nSmoothing = 4 if nskips > 1 else 12 # need less agressive moving average on skipper images
+    nSmoothing = 4 if int(header['NDCMS']) > 1 else 12 # need less agressive moving average on skipper images
     skImageNoise, skImageNoiseErr = pd.computeSkImageNoise(data[:, :, -1], nMovingAverage=nSmoothing)
     dictImage['skNoise'] = pd.convertValErrToString((skImageNoise, skImageNoiseErr))
     
