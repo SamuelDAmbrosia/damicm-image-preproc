@@ -1,6 +1,7 @@
 import sys
 import os
 import re
+import csv
 
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), "../AutoAnalysis"))
 import PixelDistribution as pd
@@ -80,7 +81,6 @@ def main(directory):
     Program used to generate a CSV file from every image that has been taken on a given CCD.
     It should take a file which looks like "UW1605S", for example.
     """
-    
     #Create CSV
     with open(directory + ".csv", 'w', newline='') as csvfile:
         
@@ -90,6 +90,7 @@ def main(directory):
                       'imgNoise', 'skNoise', 'aveImgS', 'dSdskip', 'pixVar', 'clustVar', 'tailRatio',
 #inputs
                       'EXP', 'AMPL', 'HCKDRIN', 'VCKDRIN', 'ITGTIME', 'VIDGAIN', 'PRETIME', 'POSTIME', 'DGWIDTH', 'RGWIDTH', 'OGWIDTH', 'SWWIDTH', 'HWIDTH', 'HOWIDTH', 'VWIDTH', 'VOWIDTH', 'ONEVCKHI', 'ONEVCKLO', 'TWOVCKHI', 'TWOVCKLO', 'TGHI', 'TGLO', 'HUHI', 'HULO', 'HLHI', 'HLLO', 'RGHI', 'RGLO', 'SWLO', 'DGHI', 'DGLO', 'OGHI', 'OGLO', 'BATTR', 'VDD1', 'VDD2', 'DRAIN1', 'DRAIN2', 'VREF1', 'VREF2', 'OPG1', 'OPG2']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         
         #iterate through all files in the specified directory and its subdirectories
@@ -100,7 +101,7 @@ def main(directory):
                 
                 if(ImgForm.match(image)):
                     writer.writerow(imageToDict(filepath))
-                
+                    
         
     
 #Check correct formatting for input directory
@@ -110,6 +111,7 @@ try:
         os.path.dirname(sys.argv[1]))
     if not (os.path.isdir(directory)):
         print("Cannot find directory!")
+        assert(os.path.isdir(directory))
     assert(CCDFull.match(directory) or CCDDay.match(directory))
     main(sys.argv[1])
 except AssertionError:
