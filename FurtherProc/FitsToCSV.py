@@ -2,10 +2,17 @@ import sys
 import os
 import re
 import csv
+import time
+
+from tqdm import tqdm
+
+for i in tqdm(range(10)):
+    time.sleep(3)
 
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), "../AutoAnalysis"))
 import PixelDistribution as pd
 import PixelStats as ps
+import DamicImage
 import constants as c
 import readFits
 
@@ -20,6 +27,9 @@ def imageToDict(filepath):
     """
     
     header, data = readFits.read(filepath)
+    
+    reverseHistogram = (1, 0)["Avg" in filepath]
+    image = DamicImage.DamicImage(data[:, :, -1], reverse=reverseHistogram)
     
     dictImage = {}
     
@@ -37,7 +47,7 @@ def imageToDict(filepath):
     
     #find individual peak noise
     nSmoothing = 4 if int(header['NDCMS']) > 1 else 12 # need less agressive moving average on skipper images
-    skImageNoise, skImageNoiseErr = pd.computeSkImageNoise(data[:, :, -1], nMovingAverage=nSmoothing)
+    skImageNoise, skImageNoiseErr = pd.computeSkImageNoise(image, nMovingAverage=nSmoothing)
     dictImage['skNoise'] = pd.convertValErrToString((skImageNoise, skImageNoiseErr))
     
     #find entropy of the average image
@@ -47,11 +57,21 @@ def imageToDict(filepath):
     entropySlope, entropySlopeErr, _ = pd.imageEntropySlope(data[:, :, :-1])
     dictImage['dSdskip'] = pd.convertValErrToString((entropySlope, entropySlopeErr))
     
+    #find dark current
+    if header['NDCMS'] > 1000:
+        darkCurrent, darkCurrentErr = pd.computeDarkCurrent(
+            image, nMovingAverage=nSmoothing
+        )
+        dictImage['DC'] = pd.convertValErrToString((darkCurrent, darkCurrentErr))
+    else:
+        dictImage['DC'] = -1
+    
+    
     # Compute pixel noise metrics
     ntrials = 10000
     singlePixelVariance, _ = ps.singlePixelVariance(data[:, :, :-1], ntrials=ntrials)
     imageNoiseVariance, _ = ps.imageNoiseVariance(
-        data[:, :, :-1], nskips - c.SKIPPER_OFFSET, ntrials=ntrials
+        data[:, :, :-1], header['NDCMS'] - c.SKIPPER_OFFSET, ntrials=ntrials
     )
     
     #find variance of random pixels
@@ -61,17 +81,17 @@ def imageToDict(filepath):
     dictImage['clustVar'] = imageNoiseVariance
     
     #find tail ratio
-    dictImage['tailRatio'] = pd.computeImageTailRatio(data[:, :, :-1])
+    dictImage['tailRatio'] = pd.computeImageTailRatio(image)
     
     ### Define input variables
     
-    headerVars = ['EXP', 'AMPL', 'HCKDRIN', 'VCKDRIN', 'ITGTIME', 'VIDGAIN', 'PRETIME', 'POSTIME', 'DGWIDTH', 'RGWIDTH', 'OGWIDTH', 'SWWIDTH', 'HWIDTH', 'HOWIDTH', 'VWIDTH', 'VOWIDTH', 'ONEVCKHI', 'ONEVCKLO', 'TWOVCKHI', 'TWOVCKLO', 'TGHI', 'TGLO', 'HUHI', 'HULO', 'HLHI', 'HLLO', 'RGHI', 'RGLO', 'SWLO', 'DGHI', 'DGLO', 'OGHI', 'OGLO', 'BATTR', 'VDD1', 'VDD2', 'DRAIN1', 'DRAIN2', 'VREF1', 'VREF2', 'OPG1', 'OPG2']
+    headervars = ['EXP', 'AMPL', 'HCKDRIN', 'VCKDRIN', 'ITGTIME', 'VIDGAIN', 'PRETIME', 'POSTIME', 'DGWIDTH', 'RGWIDTH', 'OGWIDTH', 'SWWIDTH', 'HWIDTH', 'HOWIDTH', 'VWIDTH', 'VOWIDTH', 'ONEVCKHI', 'ONEVCKLO', 'TWOVCKHI', 'TWOVCKLO', 'TGHI', 'TGLO', 'HUHI', 'HULO', 'HLHI', 'HLLO', 'RGHI', 'RGLO', 'SWLO', 'DGHI', 'DGLO', 'OGHI', 'OGLO', 'BATTR', 'VDD1', 'VDD2', 'DRAIN1', 'DRAIN2', 'VREF1', 'VREF2', 'OPG1', 'OPG2']
     
     for var in headervars:
         try:
             dictImage[var] = header[var]
         except:
-            dictImage[var] = None
+            dictImage[var] = -1
     
     return dictImage
     
@@ -87,7 +107,7 @@ def main(directory):
         #Fields correspond to variables - name, skips, size then output variables first, then input variables
         fieldnames = ['imgName', 'NDCMS', 'NAXIS1', 'NAXIS2', 
 #dictImage                      
-                      'imgNoise', 'skNoise', 'aveImgS', 'dSdskip', 'pixVar', 'clustVar', 'tailRatio',
+                      'imgNoise', 'skNoise', 'aveImgS', 'dSdskip', 'pixVar', 'clustVar', 'tailRatio', 'DC',
 #inputs
                       'EXP', 'AMPL', 'HCKDRIN', 'VCKDRIN', 'ITGTIME', 'VIDGAIN', 'PRETIME', 'POSTIME', 'DGWIDTH', 'RGWIDTH', 'OGWIDTH', 'SWWIDTH', 'HWIDTH', 'HOWIDTH', 'VWIDTH', 'VOWIDTH', 'ONEVCKHI', 'ONEVCKLO', 'TWOVCKHI', 'TWOVCKLO', 'TGHI', 'TGLO', 'HUHI', 'HULO', 'HLHI', 'HLLO', 'RGHI', 'RGLO', 'SWLO', 'DGHI', 'DGLO', 'OGHI', 'OGLO', 'BATTR', 'VDD1', 'VDD2', 'DRAIN1', 'DRAIN2', 'VREF1', 'VREF2', 'OPG1', 'OPG2']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -108,6 +128,7 @@ def main(directory):
 
 try:
     directory = sys.argv[1]
+    print(os.path.basename(directory))
     if not (os.path.isdir(directory)):
         print("Cannot find directory!")
         assert(os.path.isdir(directory))
