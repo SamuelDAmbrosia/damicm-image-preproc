@@ -107,12 +107,11 @@ def main(directory):
 #Check correct formatting for input directory
 
 try:
-    directory = os.path.basename(
-        os.path.dirname(sys.argv[1]))
+    directory = sys.argv[1]
     if not (os.path.isdir(directory)):
         print("Cannot find directory!")
         assert(os.path.isdir(directory))
-    assert(CCDFull.match(directory) or CCDDay.match(directory))
+    assert(CCDFull.match(os.path.basename(directory)) or CCDDay.match(os.path.basename(directory)))
     main(sys.argv[1])
 except AssertionError:
     print("Directory must have format UW****S or 20**-**-**")
