@@ -144,16 +144,15 @@ for i in tqdm(range(10)):
                 imgs += 1
         
         #iterate through all files in the specified directory and its subdirectories
-        with tqdm(range(imgs)) as pbar:
-            for subdir, dirs, files in os.walk(directory):
-                for image in files:
-                    
-                    pbar.update(1)
+        for subdir, dirs, files in os.walk(directory):
+            for image in files:
 
-                    filepath = subdir + os.sep + image
-
+                filepath = subdir + os.sep + image
+                try:
                     if(ImgForm.match(image)):
                         writer.writerow(imageToDict(filepath))
+                except RuntimeError:
+                    print("RuntimeError on image: " + subdir + "/" + image)
                 
     
 #Check correct formatting for input directory

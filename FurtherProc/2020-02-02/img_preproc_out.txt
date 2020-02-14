@@ -1,0 +1,37 @@
+filename                                                               nskips    aveImgS  dSdskip           imgNoise  skNoise          tailRatio  darkCurrent
+-------------------------------------------------------------------  --------  ---------  --------------  ----------  -------------  -----------  ---------------
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_00.fits         1     2.282   -1 +/- -1            77.55  4.7 +/- 1.1        84.53    25 +/- 4
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_01.fits         1     5.794   -1 +/- -1            76.09  -1 +/- -1          66.15    5.2 +/- 0.4
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_02.fits      4000     4.362   -0.4 +/- 0.16        80.42  1.7 +/- 0.058       0       1 +/- 0.025
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_03.fits         1     6.125   -1 +/- -1            92.35  -1 +/- -1          31.11    9 +/- 0.85
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_04.fits         1     6.215   -1 +/- -1            91.09  -1 +/- -1          33.42    9.4 +/- 0.43
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_05.fits      4000     4.31    -0.2 +/- 0.17        78.38  2 +/- 0.13         42.1     1.2 +/- 0.022
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_06.fits         1     5.749   -1 +/- -1            76.16  -1 +/- -1           1.206   4.8 +/- 0.27
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_07.fits         1     6.451   -1 +/- -1           153.1   -1 +/- -1           0.8771  40 +/- 1.2
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_08.fits         1     6.2     -1 +/- -1            88.12  -1 +/- -1          36.07    9 +/- 1.3
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_09.fits         1     8.402   -1 +/- -1          1018     -1 +/- -1           1.184   5.2e+02 +/- inf
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_10.fits         1     8.358   -1 +/- -1          1012     -1 +/- -1           0.9867  5.3e+02 +/- inf
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_11.fits         1     7.926   -1 +/- -1           632.4   3.8 +/- 3.9         1.513   3.3e+02 +/- inf
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_12.fits         1     6.417   -1 +/- -1           115.6   -1 +/- -1          27.78    28 +/- 2.9
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_13.fits         1     5.861   -1 +/- -1            77.83  -1 +/- -1          52.47    4.6 +/- 0.74
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_14.fits         1     5.899   -1 +/- -1            76.14  -1 +/- -1          59.99    4.9 +/- 0.62
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_15.fits         1     5.839   -1 +/- -1            76.47  -1 +/- -1          69.4     7.5 +/- 1.7
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_16.fits         1     5.859   -1 +/- -1            76.71  -1 +/- -1          63.61    4.5 +/- 0.63
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_17.fits      4000     2.347   -0.34 +/- 0.28       76.73  1.6 +/- inf      1308       0 +/- 0
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_18.fits      4000     2.828   -0.43 +/- 0.24       77.08  1.9 +/- 0.062     110.5     0 +/- 0
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_19.fits      4000     3.017   -0.19 +/- 0.11       76.78  1.6 +/- 0.054     892       0.23 +/- 0.0069
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_20.fits      4000     3.14    -0.17 +/- 0.15       77.04  1.6 +/- 0.05     1508       0.27 +/- 0.0075
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_21.fits      4000     0.7199  -45 +/- 31           20.5   -1 +/- -1           0       -1 +/- -1
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_22.fits      4000     2.717   0.095 +/- 0.15      155     2.9 +/- 0.057      15.79    0 +/- 0
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_23.fits      4000     4.635   -11 +/- 2.6         256.1   8 +/- 0.3           0       0 +/- 0
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_24.fits      4000     5.038   -0.49 +/- 0.24       81.05  1.6 +/- 0.04    17590       0.7 +/- 0.063
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_25.fits         1     6.455   -1 +/- -1            77.59  -1 +/- -1          54.97    5.9 +/- 0.39
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_26.fits         1     6.484   -1 +/- -1            77.62  62 +/- 40          55.12    6.8 +/- 0.72
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_27.fits      4000     4.557   -0.21 +/- 0.2        78.4   1.7 +/- 0.072   20610       0.52 +/- 0.018
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_28.fits         1     6.557   -1 +/- -1            77.63  -1 +/- -1          55.52    8.3 +/- 0.41
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_29.fits         1     6.032   -1 +/- -1            76.55  -1 +/- -1          53.22    4.5 +/- 0.31
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_30.fits      4000     3.329   -0.24 +/- 0.17       76.64  1.8 +/- 0.1       865.7     0.14 +/- 0.0038
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_31.fits         1     5.935   -1 +/- -1            76.09  -1 +/- -1          53.04    9.2 +/- 0.93
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_32.fits      4000     3.474   -0.2 +/- 0.16        76.57  3.3 +/- 0.28      615.7     0.15 +/- 0.002
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_33.fits         1     5.96    -1 +/- -1            76.02  -1 +/- -1          52.91    4.5 +/- 0.62
+/data/damic/uwashington/raw/SKImages/UW1608S/2020-02-02/Img_34.fits      4000     3.792   -0.11 +/- 0.13       76.73  3.3 +/- 0.25      128.9     0.16 +/- 0.0063
