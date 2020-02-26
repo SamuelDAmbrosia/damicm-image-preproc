@@ -26,8 +26,6 @@ def imageToDict(filepath):
     
     reverseHistogram = (1, 0)["Avg" in filepath]
     image = DamicImage.DamicImage(data[:, :, -1], reverse=reverseHistogram)
-    
-    #with tqdm(range(9)) as pbar:
 
     dictImage = {}
 
@@ -38,32 +36,22 @@ def imageToDict(filepath):
     dictImage['NAXIS1'] = header['NAXIS1']
     dictImage['NAXIS2'] = header['NAXIS2']
 
-#    pbar.update(1)
-
     ### Define output variables
 
     #find image noise
     dictImage['imgNoise'] = pd.computeImageNoise(data[:, :, :-1])
-
-   # pbar.update(1)
 
     #find individual peak noise
     nSmoothing = 4 if int(header['NDCMS']) > 1 else 12 # need less agressive moving average on skipper images
     skImageNoise, skImageNoiseErr = pd.computeSkImageNoise(image, nMovingAverage=nSmoothing)
     dictImage['skNoise'] = pd.convertValErrToString((skImageNoise, skImageNoiseErr))
 
- #   pbar.update(1)
-
     #find entropy of the average image
     dictImage['aveImgS'] = pd.imageEntropy(data[:, :, -1])
-
- #   pbar.update(1)
 
     #find rate of entropy change as a function of skips
     entropySlope, entropySlopeErr, _ = pd.imageEntropySlope(data[:, :, :-1])
     dictImage['dSdskip'] = pd.convertValErrToString((entropySlope, entropySlopeErr))
-
-#    pbar.update(1)
 
     #find dark current
     if header['NDCMS'] > 1000:
@@ -74,8 +62,6 @@ def imageToDict(filepath):
     else:
         dictImage['DC'] = -1
 
-#    pbar.update(1)
-
 
     # Compute pixel noise metrics
     ntrials = 10000
@@ -83,8 +69,6 @@ def imageToDict(filepath):
     imageNoiseVariance, _ = ps.imageNoiseVariance(
         data[:, :, :-1], header['NDCMS'] - c.SKIPPER_OFFSET, ntrials=ntrials
     )
-
-#    pbar.update(1)
 
     #find variance of random pixels
     dictImage['pixVar'] = singlePixelVariance
@@ -94,8 +78,6 @@ def imageToDict(filepath):
 
     #find tail ratio
     dictImage['tailRatio'] = pd.computeImageTailRatio(image)
-
-    #pbar.update(1)
 
     ### Define input variables
 
@@ -126,33 +108,30 @@ def main(directory):
                       'imgNoise', 'skNoise', 'aveImgS', 'dSdskip', 'pixVar', 'clustVar', 'tailRatio', 'DC',
 #inputs
                       'EXP', 'AMPL', 'HCKDIRN', 'VCKDIRN', 'ITGTIME', 'VIDGAIN', 'PRETIME', 'POSTIME', 'DGWIDTH', 'RGWIDTH', 'OGWIDTH', 'SWWIDTH', 'HWIDTH', 'HOWIDTH', 'VWIDTH', 'VOWIDTH', 'ONEVCKHI', 'ONEVCKLO', 'TWOVCKHI', 'TWOVCKLO', 'TGHI', 'TGLO', 'HUHI', 'HULO', 'HLHI', 'HLLO', 'RGHI', 'RGLO', 'SWLO', 'DGHI', 'DGLO', 'OGHI', 'OGLO', 'BATTR', 'VDD1', 'VDD2', 'DRAIN1', 'DRAIN2', 'VREF1', 'VREF2', 'OPG1', 'OPG2']
-        '''
-from tqdm import tqdm
-
-for i in tqdm(range(10)):
-    time.sleep(3)
-'''
+        
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         
-        #see how many images are in the directory
-        
-        imgs = 0
-        
-        for subdir, dirs, files in os.walk(directory):
-            for image in files:
-                imgs += 1
-        
         #iterate through all files in the specified directory and its subdirectories
+        
         for subdir, dirs, files in os.walk(directory):
-            for image in files:
+        
+            #use a progress bar for each directory being re
+        
+            with tqdm(total = len(files)) as pbar:
 
-                filepath = subdir + os.sep + image
-                try:
-                    if(ImgForm.match(image)):
-                        writer.writerow(imageToDict(filepath))
-                except RuntimeError:
-                    print("RuntimeError on image: " + subdir + "/" + image)
+                print("Reading images from: " + str(subdir))
+
+                for image in files:
+
+                    filepath = subdir + os.sep + image
+                    pbar.update(1)
+
+                    try:
+                        if(ImgForm.match(image)):
+                            writer.writerow(imageToDict(filepath))
+                    except RuntimeError:
+                        print("RuntimeError on image: " + subdir + "/" + image)
                 
     
 #Check correct formatting for input directory
