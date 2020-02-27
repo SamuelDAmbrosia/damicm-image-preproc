@@ -100,7 +100,7 @@ def main(directory):
     It should take a file which looks like "UW1605S", for example.
     """
     #Create CSV
-    with open(directory + ".csv", 'w', newline='') as csvfile:
+    with open(os.path.basename(directory) + ".csv", 'w', newline='') as csvfile:
         
         #Fields correspond to variables - name, skips, size then output variables first, then input variables
         fieldnames = ['imgName', 'NDCMS', 'NAXIS1', 'NAXIS2', 
@@ -115,6 +115,8 @@ def main(directory):
         #iterate through all files in the specified directory and its subdirectories
         
         for subdir, dirs, files in os.walk(directory):
+            
+            print(directory)
         
             #use a progress bar for each directory being re
         
