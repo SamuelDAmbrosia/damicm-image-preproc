@@ -3,6 +3,8 @@ import sys
 import csv
 import numpy as np
 
+args = sys.argv
+
 def graph1D(imgcsv, setting, smin, smax, output, omin, omax):
     '''
     Generates a graph showing relationship between one setting var and one output var
@@ -29,3 +31,11 @@ def graph1D(imgcsv, setting, smin, smax, output, omin, omax):
     plt.xlabel(setting)
     plt.ylabel(output)
     plt.show()
+    
+def main(args):
+    graph1D(args[1], args[2], int(args[3]), int(args[4]), args[5], int(args[6]), int(args[7]))
+    
+print(args)
+    
+if(len(args) == 8):
+    main(args)
