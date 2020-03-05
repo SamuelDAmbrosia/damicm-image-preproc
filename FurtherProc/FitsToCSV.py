@@ -11,6 +11,7 @@ import PixelStats as ps
 import DamicImage
 import constants as c
 import readFits
+import lmfit
 
 #Formatting for directories and images
 CCDFull = re.compile("UW\\d{4}S")
@@ -44,23 +45,23 @@ def imageToDict(filepath):
     #find individual peak noise
     nSmoothing = 4 if int(header['NDCMS']) > 1 else 12 # need less agressive moving average on skipper images
     skImageNoise, skImageNoiseErr = pd.computeSkImageNoise(image, nMovingAverage=nSmoothing)
-    dictImage['skNoise'] = pd.convertValErrToString((skImageNoise, skImageNoiseErr))
+    dictImage['skNoise'] = float(skImageNoise)
+    dictImage['skNoiseError'] = float(skImageNoiseErr)
 
     #find entropy of the average image
     dictImage['aveImgS'] = pd.imageEntropy(data[:, :, -1])
 
     #find rate of entropy change as a function of skips
     entropySlope, entropySlopeErr, _ = pd.imageEntropySlope(data[:, :, :-1])
-    dictImage['dSdskip'] = pd.convertValErrToString((entropySlope, entropySlopeErr))
+    dictImage['dSdskip'] = entropySlope
+    dictImage['dSdskipError'] = entropySlopeErr
 
     #find dark current
-    if header['NDCMS'] > 1000:
-        darkCurrent, darkCurrentErr = pd.computeDarkCurrent(
-            image, nMovingAverage=nSmoothing
-        )
-        dictImage['DC'] = pd.convertValErrToString((darkCurrent, darkCurrentErr))
-    else:
-        dictImage['DC'] = -1
+    
+    darkCurrent, darkCurrentErr = pd.computeDarkCurrent(
+        image, nMovingAverage=nSmoothing)
+    dictImage['DC'] = float(darkCurrent)
+    dictImage['DCError'] = float(darkCurrentErr)
 
 
     # Compute pixel noise metrics
@@ -89,8 +90,6 @@ def imageToDict(filepath):
         except:
             dictImage[var] = -1
 
-    #pbar.update(1)
-
     return dictImage
     
     
@@ -105,7 +104,7 @@ def main(directory):
         #Fields correspond to variables - name, skips, size then output variables first, then input variables
         fieldnames = ['imgName', 'NDCMS', 'NAXIS1', 'NAXIS2', 
 #dictImage                      
-                      'imgNoise', 'skNoise', 'aveImgS', 'dSdskip', 'pixVar', 'clustVar', 'tailRatio', 'DC',
+                      'imgNoise', 'skNoise', 'skNoiseError', 'aveImgS', 'dSdskip', 'dSdskipError', 'pixVar', 'clustVar', 'tailRatio', 'DC', 'DCError',
 #inputs
                       'EXP', 'AMPL', 'HCKDIRN', 'VCKDIRN', 'ITGTIME', 'VIDGAIN', 'PRETIME', 'POSTIME', 'DGWIDTH', 'RGWIDTH', 'OGWIDTH', 'SWWIDTH', 'HWIDTH', 'HOWIDTH', 'VWIDTH', 'VOWIDTH', 'ONEVCKHI', 'ONEVCKLO', 'TWOVCKHI', 'TWOVCKLO', 'TGHI', 'TGLO', 'HUHI', 'HULO', 'HLHI', 'HLLO', 'RGHI', 'RGLO', 'SWLO', 'DGHI', 'DGLO', 'OGHI', 'OGLO', 'BATTR', 'VDD1', 'VDD2', 'DRAIN1', 'DRAIN2', 'VREF1', 'VREF2', 'OPG1', 'OPG2']
         
